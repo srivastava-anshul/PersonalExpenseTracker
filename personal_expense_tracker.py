@@ -4,16 +4,17 @@ from datetime import datetime
 
 # List to store expenses
 expenses = []
-
 # File name for saving/loading expenses
 expense_file = 'expenses.csv'
 
 # Global variable for monthly budgets for months
 monthly_budgets = {}  # key: "YYYY-MM", value: float
+# File name for saving/loading monthly budget
 budget_file = 'budget.txt'
 
 from enum import Enum
 
+#Expense category enum
 class ExpenseCategory(Enum):
     FOOD_GROCERIES = (1, "Food & Groceries")
     HOUSING_UTILITIES = (2, "Housing & Utilities")
@@ -37,6 +38,7 @@ class ExpenseCategory(Enum):
                 return item
         return cls.MISC  # fallback
 
+#sort expenses by date
 def sort_expenses(descending=False):
     expenses.sort(key=lambda x: datetime.strptime(x['date'], "%Y-%m-%d"), reverse=descending)
 
@@ -74,6 +76,7 @@ def save_expenses():
     print("Saving these expenses:", expenses)
     print("Expenses saved successfully!")
 
+#choose expense category from a numbered list
 def choose_category():
     print("\nSelect an Expense Category:")
     for category in ExpenseCategory:
@@ -85,7 +88,6 @@ def choose_category():
     except ValueError:
         print("Invalid input. Defaulting to Miscellaneous.")
         return ExpenseCategory.MISC
-
 
 # Add an expense
 def add_expense():
@@ -131,12 +133,13 @@ def view_expenses():
             print("Incomplete entry found and skipped.")
     print("-" * 50)
 
+# Save monthly budget to budget text file
 def save_budget():
     with open(budget_file, mode='w') as file:
         for month, amount in monthly_budgets.items():
             file.write(f"{month},{amount}\n")
 
-
+# Load monthly budget from budget text file
 def load_budget():
     if os.path.exists(budget_file):
         with open(budget_file, mode='r') as file:
